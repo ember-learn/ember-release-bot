@@ -14,10 +14,7 @@ if (nconf.get('nconf:file')) {
 
 // common options
 nconf.defaults({
-  server: {
-    runPort: 3000,
-    useCors: true,
-  },
+  prefix: '!release',
 });
 
 module.exports = nconf.get();

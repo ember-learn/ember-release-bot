@@ -1,10 +1,13 @@
-const cors = require('cors');
-const express = require('express');
 const winston = require('winston');
 const nconf = require('nconf');
+const Discord = require('discord.js');
+const _ = require('lodash');
+const { CronJob } = require('cron');
+const Keyv = require('keyv');
 
-const settings = require('./settings');
-const appRoutes = require('./server');
+const keyv = new Keyv(`sqlite://${__dirname}/database.sqlite`);
+
+const { prefix } = require('./settings');
 
 const winstonOptions = {
   colorize: true,
@@ -24,19 +27,48 @@ if (process.env.LOG_LEVEL) {
 
 winston.add(new winston.transports.Console(winstonOptions));
 
-const app = express();
-if (settings.server.useCors) {
-  app.use(cors());
-}
+const client = new Discord.Client();
+client.commands = new Discord.Collection();
 
-// Initialisations
-require('./init')(nconf).then(() => {
-  appRoutes(app);
+const commands = require('./commands');
 
-  const server = app.listen(process.env.PORT || settings.server.runPort, () => {
-    winston.info('Server listening', {
-      host: server.address().address,
-      port: server.address().port,
-    });
-  });
+_.each(commands, (command, commandName) => {
+  client.commands.set(commandName, command);
 });
+
+client.once('ready', async () => {
+  winston.info('Ready!');
+
+  const version = await keyv.get('version');
+
+  if (!version) {
+    const channel = client.channels.find(ch => ch.name === 'core-meta');
+    channel.send('Oh no! I\'ve forgotten everything :see_no_evil: please tell me what the next release is with !release next <number> <date>');
+  }
+});
+
+client.on('message', (message) => {
+  const commandPrefix = `${prefix} `;
+  if (!message.content.startsWith(commandPrefix) || message.author.bot) return;
+
+  const args = message.content.slice(commandPrefix.length).split(/ +/);
+  const command = args.shift().toLowerCase();
+
+  if (!client.commands.has(command)) return;
+
+  try {
+    client.commands.get(command).execute(message, args, keyv);
+  } catch (error) {
+    winston.error('Errororror', error);
+    message.reply('there was an error trying to execute that command!');
+  }
+});
+
+const cronJobs = require('./cron');
+
+_.each(cronJobs, (cronJob) => {
+  // eslint-disable-next-line no-new
+  new CronJob(cronJob.cron, cronJob.job(client, keyv), null, true, 'UTC');
+});
+
+client.login(nconf.get('token'));

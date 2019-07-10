@@ -8,17 +8,14 @@
     "test-watch": "npm run test -- -w --reporter min"
   },
   "dependencies": {
-    "authmaker-verify-express": "^3.0.0",
-    "body-parser": "^1.14.1",
-    "cors": "^2.8.5",
-    "express": "^4.12.3",
-    "express-autoroute": "^2.1.0",
-    "express-autoroute-json": "^3.5.0",
+    "@keyv/sqlite": "^2.0.0",
+    "cron": "^1.7.1",
+    "discord.js": "^11.5.1",
+    "keyv": "^3.1.0",
     "lodash": "^4.13.1",
-    "mongoose": "^5.1.1",
-    "mongoose-nconf-connect": "^3.0.1",
-    "morgan": "^1.5.2",
+    "moment": "^2.24.0",
     "nconf": "^0.10.0",
+    "require-directory": "^2.1.1",
     "winston": "^3.1.0"
   },
   "devDependencies": {
