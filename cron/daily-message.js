@@ -2,7 +2,7 @@ const moment = require('moment');
 const _ = require('lodash');
 
 module.exports = {
-  cron: '30 9 * * *', // once a day at 9:30 UTC
+  cron: '00 10 * * *', // once a day at 9:30 UTC
   job(client, keyv) {
     return async () => {
       const channel = client.channels.find(ch => ch.name === 'core-meta');
