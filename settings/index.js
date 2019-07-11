@@ -15,6 +15,7 @@ if (nconf.get('nconf:file')) {
 // common options
 nconf.defaults({
   prefix: '!release',
+  token: process.env.DISCORD_TOKEN,
 });
 
 module.exports = nconf.get();
