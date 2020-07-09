@@ -4,6 +4,7 @@ const Discord = require('discord.js');
 const _ = require('lodash');
 const { CronJob } = require('cron');
 const Keyv = require('keyv');
+const express = require('express');
 
 const keyv = new Keyv(process.env.DATABASE_URL);
 
@@ -72,3 +73,9 @@ _.each(cronJobs, (cronJob) => {
 });
 
 client.login(nconf.get('token'));
+
+const app = express();
+
+app.get('/', (req, res) => res.send('Hello World!'));
+
+app.listen(process.env.PORT, () => console.log(`Example app listening at http://localhost:${process.env.PORT}`))
