@@ -5,7 +5,7 @@ const _ = require('lodash');
 const { CronJob } = require('cron');
 const Keyv = require('keyv');
 
-const keyv = new Keyv(`sqlite://${__dirname}/database.sqlite`);
+const keyv = new Keyv(process.env.DATABASE_URL);
 
 const { prefix } = require('./settings');
 
