@@ -20,7 +20,7 @@ async function assertMessageForNext(args, message, keyv) {
   });
 }
 
-describe.only('next command', function() {
+describe('next command', function() {
   it('should show a warning about usage if you dont send any args', async function() {
     await assertMessageForNext([], 'You need to provide a version and a date to `next` e.g. `!next 3.20 2020-07-13`');
   });
