@@ -24,8 +24,9 @@
     "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.8.0",
-    "mocha": "^6.1.4",
-    "pm2": "^3.5.1"
+    "mocha": "^4.0.1",
+    "chai": "^4.1.2",
+    "timekeeper": "^2.0.0"
   },
   "engines": {
     "node": "10.*"
