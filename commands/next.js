@@ -14,6 +14,12 @@ module.exports = {
     await keyv.set('version', args[0]);
     await keyv.set('date', args[1]);
 
+    // reset all product status'
+    await keyv.set('blog:done', false);
+    await keyv.set('cli:done', false);
+    await keyv.set('source:done', false);
+    await keyv.set('data:done', false);
+
     message.channel.send(`Version set to: ${args[0]} and Date set to ${args[1]}`);
   },
 };
