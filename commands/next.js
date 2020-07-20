@@ -17,7 +17,7 @@ module.exports = {
     // reset all product status'
     await keyv.set('blog:done', false);
     await keyv.set('cli:done', false);
-    await keyv.set('source:done', false);
+    await keyv.set('framework:done', false);
     await keyv.set('data:done', false);
 
     message.channel.send(`Version set to: ${args[0]} and Date set to ${args[1]}`);

@@ -54,7 +54,7 @@ describe('next command', function() {
 
     expect(keyv).to.have.property('blog:done', false);
     expect(keyv).to.have.property('cli:done', false);
-    expect(keyv).to.have.property('source:done', false);
+    expect(keyv).to.have.property('framework:done', false);
     expect(keyv).to.have.property('data:done', false);
   });
 });
