@@ -5,11 +5,8 @@ const nextCommand = rootRequire('commands/next');
 async function assertMessageForNext(args, message, keyv) {
   await nextCommand.execute({
     channel: {
-      set(incomingMessage) {
-        expect(incomingMessage).to.equal(message);
-      },
       send(incomingMessage) {
-        this.set(incomingMessage);
+        expect(incomingMessage).to.equal(message);
       },
     },
   }, args, {
