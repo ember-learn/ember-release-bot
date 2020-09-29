@@ -10,11 +10,8 @@ node_js:
 notifications:
   email: false
 
-addons:
-  code_climate:
-    repo_token:
-
-script: npm run coverage
-
-after_script:
-  - codeclimate-test-reporter < coverage/lcov.info
+branches:
+  only:
+    - master
+    # npm version tags
+    - /^v\d+\.\d+\.\d+/

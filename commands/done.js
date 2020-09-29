@@ -6,10 +6,10 @@ module.exports = {
     const data = await keyv.get('data:done');
 
     if (args.length === 0) {
-      return message.channel.send(`Framework: ${framework ? ':white_check_mark:' : ':no_entry_sign:'}
-Data: ${data ? ':white_check_mark:' : ':no_entry_sign:'}
-CLI: ${cli ? ':white_check_mark:' : ':no_entry_sign:'}
-Blog: ${blog ? ':white_check_mark:' : ':no_entry_sign:'}`);
+      return message.channel.send(`${framework ? ':white_check_mark:' : ':no_entry_sign:'} - Framework
+${data ? ':white_check_mark:' : ':no_entry_sign:'} - Data
+${cli ? ':white_check_mark:' : ':no_entry_sign:'} - CLI
+${blog ? ':white_check_mark:' : ':no_entry_sign:'} - Blog`);
     }
 
     const teams = ['blog', 'cli', 'framework', 'data'];
