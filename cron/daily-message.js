@@ -4,6 +4,7 @@ function createMessage({dateString, waitingFor}) {
   if (!dateString) {
     return;
   }
+
   const date = moment(dateString).add(5, 'days');
   const dayDiff = moment().diff(date, 'days');
   
