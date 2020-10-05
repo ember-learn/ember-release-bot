@@ -12,9 +12,11 @@ function createMessage({dateString, waitingFor}) {
   }
 
   if (dayDiff === -4) {
-    return `:tada: It's release week!! :tada: To see who is done and who isn't you can say '!release done' and I'll tell you who still needs to do something!
-
-If you know a team is done you can say '!release done <team>' where team can be blog, framework, data, or cli`;
+    return [
+      `:tada: It's release week!! :tada: To see who is done and who isn't you can say '!release done' and I'll tell you who still needs to do something!`,
+      '',
+      `If you know a team is done you can say '!release done <team>' where team can be blog, framework, data, or cli.`,
+    ].join('\n');
   }
 
   if (dayDiff === -2) {
