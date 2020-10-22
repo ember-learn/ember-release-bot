@@ -5,9 +5,9 @@ function createMessage({dateString, waitingFor}) {
     return;
   }
 
-  const date = moment(dateString).add(5, 'days');
+  const date = moment(dateString).add(4, 'days');
   const dayDiff = moment().diff(date, 'days');
-  
+
   if (dayDiff === -11) {
     return `Release week starts next week on ${moment(dateString).format('YYYY-MM-DD')} are we all prepared? :lts:`;
   }
@@ -39,7 +39,7 @@ function createMessage({dateString, waitingFor}) {
 
   if (dayDiff > 0) {
     if (waitingFor.length) {
-      return `We are currently :rotating_light: ${dayDiff + 1} Days Late :rotating_light: with the release!! We are still waiting on ${waitingFor.join(', ')}`;
+      return `We are currently :rotating_light: ${dayDiff} Days Late :rotating_light: with the release!! We are still waiting on ${waitingFor.join(', ')}`;
     }
   }
 }
@@ -62,7 +62,7 @@ module.exports = {
       }));
 
       waitingFor = _.compact(waitingFor);
-      
+
       const message = createMessage({ dateString, waitingFor });
 
       if (!message) {

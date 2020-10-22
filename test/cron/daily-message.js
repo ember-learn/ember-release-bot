@@ -4,12 +4,12 @@ const tk = require('timekeeper');
 const dailyMessage = rootRequire('cron/daily-message');
 
 async function assertMessageForDate({
-  today,
+  todayDate,
   releaseDate,
   message,
   released = [],
 }) {
-  const now = new Date(`${today} 12:00`);
+  const now = new Date(`${todayDate} 12:00`);
   tk.freeze(now);
 
   await dailyMessage.job({
@@ -22,7 +22,7 @@ async function assertMessageForDate({
   }, {
     get(key) {
       if (key === 'date') {
-        return new Date(releaseDate);
+        return new Date(`${releaseDate} 12:00`);
       }
 
       const [, product] = key.match(/^(\w+):done/);
@@ -37,7 +37,7 @@ describe('daily-message cron job', function () {
     tk.reset();
   });
 
-  it('should send a message the Friday before release week', async function() {
+  it('should send a message the Monday before release week', async function() {
     await assertMessageForDate({
       todayDate: '2020-07-13',
       releaseDate: '2020-07-20',
@@ -53,7 +53,7 @@ describe('daily-message cron job', function () {
       message: [
         `:tada: It's release week!! :tada: To see who is done and who isn't you can say '!release done' and I'll tell you who still needs to do something!`,
         '',
-        `If you know a team is done you can say '!release done <team>' where team can be blog, framework, data, or cli`
+        `If you know a team is done you can say '!release done <team>' where team can be blog, framework, data, or cli.`
       ].join('\n'),
     });
   });
@@ -91,6 +91,14 @@ describe('daily-message cron job', function () {
       released: ['framework', 'cli', 'blog', 'data'],
     });
   });
+
+  it('should send a message saying were 1 days late 1 days after the end of release week', async function() {
+    await assertMessageForDate({
+      todayDate: '2020-07-25',
+      releaseDate: '2020-07-20',
+      message: `We are currently :rotating_light: 1 Days Late :rotating_light: with the release!! We are still waiting on blog, cli, framework, data`,
+    });
+  })
 
   it('should send a message saying were 2 days late 2 days after the end of release week', async function() {
     await assertMessageForDate({
