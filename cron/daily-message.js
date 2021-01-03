@@ -1,5 +1,6 @@
 const moment = require('moment');
 const _ = require('lodash');
+
 function createMessage({dateString, waitingFor}) {
   if (!dateString) {
     return;
@@ -7,13 +8,18 @@ function createMessage({dateString, waitingFor}) {
 
   const date = moment(dateString).add(4, 'days');
 
-  const hourDiff = moment().diff(date, 'hours');
+  const hoursUntilRelease = date.diff(moment(), 'hours');
+  let hoursLate = 0;
 
-  if (hourDiff <= -262 && hourDiff >= -266) {
+  if (hoursUntilRelease < 0) {
+    hoursLate = -1 * hoursUntilRelease;
+  }
+
+  if (hoursUntilRelease >= 262 && hoursUntilRelease <= 266) {
     return `Release week starts next week on ${moment(dateString).format('YYYY-MM-DD')} are we all prepared? :lts:`;
   }
 
-  if (hourDiff <= -94 && hourDiff >= -98) {
+  if (hoursUntilRelease >= 94 && hoursUntilRelease <= 98) {
     return [
       `:tada: It's release week!! :tada: To see who is done and who isn't you can say '!release done' and I'll tell you who still needs to do something!`,
       '',
@@ -21,7 +27,7 @@ function createMessage({dateString, waitingFor}) {
     ].join('\n');
   }
 
-  if (hourDiff <= -46 && hourDiff >= -50) {
+  if (hoursUntilRelease >= 46 && hoursUntilRelease <= 50) {
     if (waitingFor.length) {
       // eslint-disable-next-line quotes
       return `We're half way through release week! Remember: you can say '!release done' to see who still needs to release!`;
@@ -30,7 +36,7 @@ function createMessage({dateString, waitingFor}) {
     }
   }
 
-  if (hourDiff <= 2 && hourDiff >= -2) {
+  if (hoursLate <= 2 && hoursUntilRelease <= 2) {
     if (waitingFor.length) {
       return `Today is the last day of release week! We're still waiting on ${waitingFor.join(', ')}. Can we release today?`;
     } else {
@@ -38,9 +44,9 @@ function createMessage({dateString, waitingFor}) {
     }
   }
 
-  if (hourDiff > 0) {
+  if (hoursLate > 0) {
     if (waitingFor.length) {
-      return `We are currently :rotating_light: ${hourDiff / 24} Days Late :rotating_light: with the release!! We are still waiting on ${waitingFor.join(', ')}`;
+      return `We are currently :rotating_light: ${Math.round(hoursLate / 24)} Days Late :rotating_light: with the release!! We are still waiting on ${waitingFor.join(', ')}`;
     }
   }
 }
