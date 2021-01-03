@@ -98,7 +98,7 @@ describe('daily-message cron job', function () {
       releaseDate: '2020-07-20',
       message: `We are currently :rotating_light: 1 Days Late :rotating_light: with the release!! We are still waiting on blog, cli, framework, data`,
     });
-  })
+  });
 
   it('should send a message saying were 2 days late 2 days after the end of release week', async function() {
     await assertMessageForDate({
