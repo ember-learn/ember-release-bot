@@ -6,8 +6,8 @@ function createMessage({dateString, waitingFor}) {
     return;
   }
 
-  const date = moment(dateString).add(4, 'days');
-  const hoursUntilRelease = date.diff(moment(), 'hours');
+  const releaseDate = moment(dateString).add(4, 'days');
+  const hoursUntilRelease = releaseDate.diff(moment(), 'hours');
 
   if (hoursUntilRelease >= 262 && hoursUntilRelease <= 266) {
     return `Release week starts next week on ${moment(dateString).format('YYYY-MM-DD')} are we all prepared? :lts:`;
@@ -40,7 +40,8 @@ function createMessage({dateString, waitingFor}) {
 
   if (hoursUntilRelease < 0) {
     if (waitingFor.length) {
-      return `We are currently :rotating_light: ${Math.round(-1 * hoursUntilRelease / 24)} Days Late :rotating_light: with the release!! We are still waiting on ${waitingFor.join(', ')}`;
+      const daysAfterRelease = Math.round(-1 * hoursUntilRelease / 24);
+      return `We are currently :rotating_light: ${daysAfterRelease} Days Late :rotating_light: with the release!! We are still waiting on ${waitingFor.join(', ')}`;
     }
   }
 }
