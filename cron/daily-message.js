@@ -44,7 +44,7 @@ function createMessage({dateString, waitingFor}) {
     }
   }
 
-  if (hoursLate > 0) {
+  if (hoursLate > 2) {
     if (waitingFor.length) {
       return `We are currently :rotating_light: ${Math.round(hoursLate / 24)} Days Late :rotating_light: with the release!! We are still waiting on ${waitingFor.join(', ')}`;
     }
