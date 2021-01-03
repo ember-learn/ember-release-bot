@@ -7,13 +7,7 @@ function createMessage({dateString, waitingFor}) {
   }
 
   const date = moment(dateString).add(4, 'days');
-
   const hoursUntilRelease = date.diff(moment(), 'hours');
-  let hoursLate = 0;
-
-  if (hoursUntilRelease < 0) {
-    hoursLate = -1 * hoursUntilRelease;
-  }
 
   if (hoursUntilRelease >= 262 && hoursUntilRelease <= 266) {
     return `Release week starts next week on ${moment(dateString).format('YYYY-MM-DD')} are we all prepared? :lts:`;
@@ -36,7 +30,7 @@ function createMessage({dateString, waitingFor}) {
     }
   }
 
-  if (hoursLate <= 2 && hoursUntilRelease <= 2) {
+  if (hoursUntilRelease >= -2 && hoursUntilRelease <= 2) {
     if (waitingFor.length) {
       return `Today is the last day of release week! We're still waiting on ${waitingFor.join(', ')}. Can we release today?`;
     } else {
@@ -44,12 +38,13 @@ function createMessage({dateString, waitingFor}) {
     }
   }
 
-  if (hoursLate > 2) {
+  if (hoursUntilRelease < 0) {
     if (waitingFor.length) {
-      return `We are currently :rotating_light: ${Math.round(hoursLate / 24)} Days Late :rotating_light: with the release!! We are still waiting on ${waitingFor.join(', ')}`;
+      return `We are currently :rotating_light: ${Math.round(-1 * hoursUntilRelease / 24)} Days Late :rotating_light: with the release!! We are still waiting on ${waitingFor.join(', ')}`;
     }
   }
 }
+
 module.exports = {
   cron: '00 10 * * *', // once a day at 9:30 UTC
   job(client, keyv) {
