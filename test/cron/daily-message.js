@@ -9,7 +9,7 @@ async function assertMessageForDate({
   message,
   released = [],
 }) {
-  const now = new Date(`${todayDate} 12:00`);
+  const now = new Date(`${todayDate} 10:01 GMT+00:00`);
   tk.freeze(now);
 
   await dailyMessage.job({
@@ -22,7 +22,7 @@ async function assertMessageForDate({
   }, {
     get(key) {
       if (key === 'date') {
-        return new Date(`${releaseDate} 12:00`);
+        return new Date(`${releaseDate} 10:00 GMT+00:00`);
       }
 
       const [, product] = key.match(/^(\w+):done/);
@@ -117,7 +117,7 @@ describe('daily-message cron job', function () {
   });
 
   it('should not send a message if we are late and all bits are released', async function() {
-    const now = new Date(`2020-07-27 12:00`);
+    const now = new Date(`2020-07-27 10:01 GMT+00:00`);
     tk.freeze(now);
 
     const released = ['framework', 'cli', 'blog', 'data'];
@@ -132,7 +132,7 @@ describe('daily-message cron job', function () {
     }, {
       get(key) {
         if (key === 'date') {
-          return new Date('2020-07-20');
+          return new Date('2020-07-20 10:00 GMT+00:00');
         }
 
         const [, product] = key.match(/^(\w+):done/);

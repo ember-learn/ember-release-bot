@@ -6,13 +6,14 @@ function createMessage({dateString, waitingFor}) {
   }
 
   const date = moment(dateString).add(4, 'days');
-  const dayDiff = moment().diff(date, 'days');
 
-  if (dayDiff === -11) {
+  const hourDiff = moment().diff(date, 'hours');
+
+  if (hourDiff <= -262 && hourDiff >= -266) {
     return `Release week starts next week on ${moment(dateString).format('YYYY-MM-DD')} are we all prepared? :lts:`;
   }
 
-  if (dayDiff === -4) {
+  if (hourDiff <= -94 && hourDiff >= -98) {
     return [
       `:tada: It's release week!! :tada: To see who is done and who isn't you can say '!release done' and I'll tell you who still needs to do something!`,
       '',
@@ -20,7 +21,7 @@ function createMessage({dateString, waitingFor}) {
     ].join('\n');
   }
 
-  if (dayDiff === -2) {
+  if (hourDiff <= -46 && hourDiff >= -50) {
     if (waitingFor.length) {
       // eslint-disable-next-line quotes
       return `We're half way through release week! Remember: you can say '!release done' to see who still needs to release!`;
@@ -29,7 +30,7 @@ function createMessage({dateString, waitingFor}) {
     }
   }
 
-  if (dayDiff === 0) {
+  if (hourDiff <= 2 && hourDiff >= -2) {
     if (waitingFor.length) {
       return `Today is the last day of release week! We're still waiting on ${waitingFor.join(', ')}. Can we release today?`;
     } else {
@@ -37,9 +38,9 @@ function createMessage({dateString, waitingFor}) {
     }
   }
 
-  if (dayDiff > 0) {
+  if (hourDiff > 0) {
     if (waitingFor.length) {
-      return `We are currently :rotating_light: ${dayDiff} Days Late :rotating_light: with the release!! We are still waiting on ${waitingFor.join(', ')}`;
+      return `We are currently :rotating_light: ${hourDiff / 24} Days Late :rotating_light: with the release!! We are still waiting on ${waitingFor.join(', ')}`;
     }
   }
 }
@@ -63,10 +64,14 @@ module.exports = {
 
       waitingFor = _.compact(waitingFor);
 
-      const message = createMessage({ dateString, waitingFor });
+      let message = createMessage({ dateString, waitingFor });
 
       if (!message) {
-        return;
+        if (process.env.NODE_ENV === 'test' && waitingFor.length) {
+          message = ('No message!');
+        } else {
+          return;
+        }
       }
 
       channels.forEach((channel) => {
