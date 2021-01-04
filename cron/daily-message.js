@@ -1,18 +1,19 @@
 const moment = require('moment');
 const _ = require('lodash');
+
 function createMessage({dateString, waitingFor}) {
   if (!dateString) {
     return;
   }
 
-  const date = moment(dateString).add(4, 'days');
-  const dayDiff = moment().diff(date, 'days');
+  const releaseDate = moment(dateString).add(4, 'days');
+  const hoursUntilRelease = releaseDate.diff(moment(), 'hours');
 
-  if (dayDiff === -11) {
+  if (isReleaseInXDays(11, hoursUntilRelease)) {
     return `Release week starts next week on ${moment(dateString).format('YYYY-MM-DD')} are we all prepared? :lts:`;
   }
 
-  if (dayDiff === -4) {
+  if (isReleaseInXDays(4, hoursUntilRelease)) {
     return [
       `:tada: It's release week!! :tada: To see who is done and who isn't you can say '!release done' and I'll tell you who still needs to do something!`,
       '',
@@ -20,7 +21,7 @@ function createMessage({dateString, waitingFor}) {
     ].join('\n');
   }
 
-  if (dayDiff === -2) {
+  if (isReleaseInXDays(2, hoursUntilRelease)) {
     if (waitingFor.length) {
       // eslint-disable-next-line quotes
       return `We're half way through release week! Remember: you can say '!release done' to see who still needs to release!`;
@@ -29,7 +30,7 @@ function createMessage({dateString, waitingFor}) {
     }
   }
 
-  if (dayDiff === 0) {
+  if (isReleaseInXDays(0, hoursUntilRelease)) {
     if (waitingFor.length) {
       return `Today is the last day of release week! We're still waiting on ${waitingFor.join(', ')}. Can we release today?`;
     } else {
@@ -37,12 +38,21 @@ function createMessage({dateString, waitingFor}) {
     }
   }
 
-  if (dayDiff > 0) {
+  if (hoursUntilRelease < 0) {
     if (waitingFor.length) {
-      return `We are currently :rotating_light: ${dayDiff} Days Late :rotating_light: with the release!! We are still waiting on ${waitingFor.join(', ')}`;
+      const daysAfterRelease = Math.round(-1 * hoursUntilRelease / 24);
+      return `We are currently :rotating_light: ${daysAfterRelease} Days Late :rotating_light: with the release!! We are still waiting on ${waitingFor.join(', ')}`;
     }
   }
 }
+
+function isReleaseInXDays(xDays, hoursUntilRelease) {
+  const hourLowerBound = 24 * xDays - 2;
+  const hourUpperBound = 24 * xDays + 2;
+
+  return (hourLowerBound <= hoursUntilRelease) && (hoursUntilRelease <= hourUpperBound);
+}
+
 module.exports = {
   cron: '00 10 * * *', // once a day at 9:30 UTC
   job(client, keyv) {
@@ -63,10 +73,14 @@ module.exports = {
 
       waitingFor = _.compact(waitingFor);
 
-      const message = createMessage({ dateString, waitingFor });
+      let message = createMessage({ dateString, waitingFor });
 
       if (!message) {
-        return;
+        if (process.env.NODE_ENV === 'test' && waitingFor.length) {
+          message = ('No message!');
+        } else {
+          return;
+        }
       }
 
       channels.forEach((channel) => {
