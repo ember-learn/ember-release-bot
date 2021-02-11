@@ -20,6 +20,6 @@ module.exports = {
     await keyv.set('framework:done', false);
     await keyv.set('data:done', false);
 
-    message.channel.send(`Version set to: ${args[0]} and Date set to ${args[1]}`);
+    return message.channel.send(`Version set to: ${args[0]} and Date set to ${args[1]}`);
   },
 };

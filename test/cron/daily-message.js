@@ -9,7 +9,7 @@ async function assertMessageForDate({
   message,
   released = [],
 }) {
-  const now = new Date(`${todayDate} 10:01 GMT+00:00`);
+  const now = new Date(`${todayDate} 10:00 GMT+00:00`);
   tk.freeze(now);
 
   await dailyMessage.job({
@@ -22,7 +22,7 @@ async function assertMessageForDate({
   }, {
     get(key) {
       if (key === 'date') {
-        return new Date(`${releaseDate} 10:00 GMT+00:00`);
+        return new Date(`${releaseDate}`);
       }
 
       const [, product] = key.match(/^(\w+):done/);
@@ -50,11 +50,9 @@ describe('daily-message cron job', function () {
     await assertMessageForDate({
       todayDate: '2020-07-20',
       releaseDate: '2020-07-20',
-      message: [
-        `:tada: It's release week!! :tada: To see who is done and who isn't you can say '!release done' and I'll tell you who still needs to do something!`,
-        '',
-        `If you know a team is done you can say '!release done <team>' where team can be blog, framework, data, or cli.`
-      ].join('\n'),
+      message: `:tada: It's release week!! :tada: To see who is done and who isn't you can say '!release done' and I'll tell you who still needs to do something!
+
+If you know a team is done you can say '!release done <team>' where team can be blog, framework, data, or cli.`,
     });
   });
 
@@ -72,6 +70,14 @@ describe('daily-message cron job', function () {
       releaseDate: '2020-07-20',
       message: `Wow! :tada: we have released everything within 3 days!? This must be some sort of record :scream: Congratulations to everyone who helped out! :tada:`,
       released: ['framework', 'cli', 'blog', 'data'],
+    });
+  });
+
+  it('should not send a message on the Thursday of release week', async function() {
+    await assertMessageForDate({
+      todayDate: '2020-07-23',
+      releaseDate: '2020-07-20',
+      message: `No message!`,
     });
   });
 

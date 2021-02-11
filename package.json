@@ -6,7 +6,8 @@
     "start": "NODE_ENV=production node app.js",
     "start-watch": "NODE_ENV=development pm2-runtime -s start app.js --name chris-backend --watch",
     "test": "NODE_ENV=test mocha --recursive --reporter spec",
-    "test-watch": "npm run test -- -w --reporter min"
+    "test-watch": "npm run test -- -w --reporter min",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@keyv/postgres": "^1.0.16",
