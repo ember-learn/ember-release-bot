@@ -43,7 +43,7 @@ client.once('ready', async () => {
   const version = await keyv.get('version');
 
   if (!version) {
-    const channel = client.channels.find(ch => ch.name === 'core-meta');
+    const channel = client.channels.find((ch) => ch.name === 'core-meta');
     channel.send('Oh no! I\'ve forgotten everything :see_no_evil: please tell me what the next release is with !release next <number> <date>');
   }
 });
@@ -78,4 +78,4 @@ const app = express();
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
-app.listen(process.env.PORT, () => console.log(`Example app listening at http://localhost:${process.env.PORT}`))
+app.listen(process.env.PORT, () => console.log(`Example app listening at http://localhost:${process.env.PORT}`));
