@@ -12,6 +12,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 10
+    - uses: mansona/npm-lockfile-version@v1
+    - run: npm i -g npm@7
     - run: npm ci
     - run: npm test
     - run: npm run lint

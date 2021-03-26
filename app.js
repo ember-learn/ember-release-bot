@@ -5,8 +5,17 @@ const _ = require('lodash');
 const { CronJob } = require('cron');
 const Keyv = require('keyv');
 const express = require('express');
+const KeyvPostgres = require('@keyv/postgres');
 
-const keyv = new Keyv(process.env.DATABASE_URL);
+const store = new KeyvPostgres({
+  uri: process.env.DATABASE_URL,
+  ssl: {
+    require: true,
+    rejectUnauthorized: false,
+  },
+});
+
+const keyv = new Keyv({ store });
 
 const { prefix } = require('./settings');
 
