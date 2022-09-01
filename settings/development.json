@@ -1,5 +1,7 @@
 {
   "nconf": {
     "file": "./settings/secure.json"
-  }
+  },
+  "useSqlite": true,
+  "clientId": "1014542759220215888"
 }

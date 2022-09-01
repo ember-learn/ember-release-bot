@@ -1,5 +1,6 @@
 {
   "nconf": {
     "file": "./settings/secure.json"
-  }
+  },
+  "clientId": "519243998380949505"
 }
