@@ -15,6 +15,7 @@ if (nconf.get('nconf:file')) {
 // common options
 nconf.defaults({
   token: process.env.DISCORD_TOKEN,
+  clientId: process.env.DISCORD_CLIENT_ID,
 });
 
 module.exports = nconf.get();
