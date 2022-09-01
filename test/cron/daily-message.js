@@ -13,12 +13,14 @@ async function assertMessageForDate({
   tk.freeze(now);
 
   await dailyMessage.job({
-    channels: [{
-      name: 'core-meta',
-      send(incomingMessage) {
-        expect(incomingMessage).to.equal(message);
-      },
-    }],
+    channels: {
+      cache: [{
+        name: 'core-meta',
+        send(incomingMessage) {
+          expect(incomingMessage).to.equal(message);
+        },
+      }],
+    },
   }, {
     get(key) {
       if (key === 'date') {
@@ -129,12 +131,14 @@ If you know a team is done you can say '!release done <team>' where team can be 
     const released = ['framework', 'cli', 'blog', 'data'];
 
     await dailyMessage.job({
-      channels: [{
-        name: 'core-meta',
-        send() {
-          throw new Error('we should not hit this bit - no message should be sent');
-        },
-      }],
+      channels: {
+        cache: [{
+          name: 'core-meta',
+          send() {
+            throw new Error('we should not hit this bit - no message should be sent');
+          },
+        }],
+      },
     }, {
       get(key) {
         if (key === 'date') {
