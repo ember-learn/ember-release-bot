@@ -57,7 +57,7 @@ module.exports = {
   cron: '00 10 * * *', // once a day at 9:30 UTC
   job(client, keyv) {
     return async () => {
-      const channels = client.channels.filter((ch) => ch.name === 'core-meta');
+      const channels = client.channels.cache.filter((ch) => ch.name === 'core-meta');
 
       const dateString = await keyv.get('date');
 

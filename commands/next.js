@@ -1,18 +1,30 @@
 const moment = require('moment');
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
-  description: 'Ping!',
-  async execute(message, args, keyv) {
-    if (args.length !== 2) {
-      return message.channel.send('You need to provide a version and a date to `next` e.g. `!next 3.20 2020-07-13`');
+  data: new SlashCommandBuilder()
+    .setName('release-next')
+    .setDescription('Sets the next date for release')
+    .addStringOption((option) => option.setName('version')
+      .setDescription('The next version to be released')
+      .setRequired(true))
+    .addStringOption((option) => option.setName('date')
+      .setDescription('The date of the monday of release week')
+      .setRequired(true)),
+
+  async execute(interaction, keyv) {
+    const version = interaction.options.getString('version');
+    const releaseDate = interaction.options.getString('date');
+
+    if (moment(releaseDate).day() !== 1) {
+      return interaction.reply({
+        content: `You tried to set the date as ${releaseDate} which is a ${moment(releaseDate).format('dddd')}. The release bot expects you to pick the **Monday** of the release week.`,
+        ephemeral: true,
+      });
     }
 
-    if (moment(args[1]).day() !== 1) {
-      return message.channel.send(`You tried to set the date as ${args[1]} which is a ${moment(args[1]).format('dddd')}. The release bot expects you to pick the **Monday** of the release week.`);
-    }
-
-    await keyv.set('version', args[0]);
-    await keyv.set('date', args[1]);
+    await keyv.set('version', version);
+    await keyv.set('date', releaseDate);
 
     // reset all product status'
     await keyv.set('blog:done', false);
@@ -20,6 +32,6 @@ module.exports = {
     await keyv.set('framework:done', false);
     await keyv.set('data:done', false);
 
-    return message.channel.send(`Version set to: ${args[0]} and Date set to ${args[1]}`);
+    return interaction.reply(`Version set to: ${version} and Date set to ${releaseDate}`);
   },
 };

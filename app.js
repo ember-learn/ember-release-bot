@@ -1,23 +1,28 @@
 const winston = require('winston');
 const nconf = require('nconf');
-const Discord = require('discord.js');
+const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const _ = require('lodash');
 const { CronJob } = require('cron');
 const Keyv = require('keyv');
 const express = require('express');
 const KeyvPostgres = require('@keyv/postgres');
 
-const store = new KeyvPostgres({
-  uri: process.env.DATABASE_URL,
-  ssl: {
-    require: true,
-    rejectUnauthorized: false,
-  },
-});
+const { useSqlite } = require('./settings');
 
-const keyv = new Keyv({ store });
+let keyv;
 
-const { prefix } = require('./settings');
+if (useSqlite) {
+  keyv = new Keyv('sqlite://database.sqlite');
+} else {
+  const store = new KeyvPostgres({
+    uri: process.env.DATABASE_URL,
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  });
+  keyv = new Keyv({ store });
+}
 
 const winstonOptions = {
   colorize: true,
@@ -37,13 +42,13 @@ if (process.env.LOG_LEVEL) {
 
 winston.add(new winston.transports.Console(winstonOptions));
 
-const client = new Discord.Client();
-client.commands = new Discord.Collection();
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+client.commands = new Collection();
 
 const commands = require('./commands');
 
-_.each(commands, (command, commandName) => {
-  client.commands.set(commandName, command);
+_.each(commands, (command) => {
+  client.commands.set(command.data.name, command);
 });
 
 client.once('ready', async () => {
@@ -52,25 +57,26 @@ client.once('ready', async () => {
   const version = await keyv.get('version');
 
   if (!version) {
-    const channel = client.channels.find((ch) => ch.name === 'core-meta');
-    channel.send('Oh no! I\'ve forgotten everything :see_no_evil: please tell me what the next release is with !release next <number> <date>');
+    const channels = client.channels.cache.filter((channel) => channel.name === 'core-meta');
+
+    channels.forEach((channel) => {
+      channel.send('Oh no! I\'ve forgotten everything :see_no_evil: please tell me what the next release is with !release next <number> <date>');
+    });
   }
 });
 
-client.on('message', (message) => {
-  const commandPrefix = `${prefix} `;
-  if (!message.content.startsWith(commandPrefix) || message.author.bot) return;
+client.on('interactionCreate', async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
 
-  const args = message.content.slice(commandPrefix.length).split(/ +/);
-  const command = args.shift().toLowerCase();
+  const command = interaction.client.commands.get(interaction.commandName);
 
-  if (!client.commands.has(command)) return;
+  if (!command) return;
 
   try {
-    client.commands.get(command).execute(message, args, keyv);
+    await command.execute(interaction, keyv);
   } catch (error) {
-    winston.error('Errororror', error);
-    message.reply('there was an error trying to execute that command!');
+    console.error(error);
+    await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
   }
 });
 

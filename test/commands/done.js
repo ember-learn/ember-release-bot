@@ -4,12 +4,15 @@ const doneCommand = rootRequire('commands/done');
 
 async function assertMessageForDone(args, message, keyv) {
   await doneCommand.execute({
-    channel: {
-      send(incomingMessage) {
-        expect(incomingMessage).to.equal(message);
+    reply(incomingMessage) {
+      expect(incomingMessage).to.equal(message);
+    },
+    options: {
+      getString() {
+        // NOOP
       },
     },
-  }, args, {
+  }, {
     set(key, value) {
       // eslint-disable-next-line no-param-reassign
       keyv[key] = value;
