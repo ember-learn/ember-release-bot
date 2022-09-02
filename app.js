@@ -72,7 +72,10 @@ client.on('interactionCreate', async (interaction) => {
   try {
     await command.execute(interaction, keyv);
   } catch (error) {
-    console.error(error);
+    winston.error('error executing command', {
+      command,
+      error,
+    });
     await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
   }
 });
