@@ -8,7 +8,7 @@ module.exports = {
     .setDescription('Checks the status of the teams and optionally toggles them')
     .addStringOption((option) => option.setName('team')
       .setDescription(`The team (${teams.join(', ')}) to toggle`)
-      .setRequired(true)),
+      .setRequired(false)),
 
   async execute(interaction, keyv) {
     const blog = await keyv.get('blog:done');
