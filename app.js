@@ -5,7 +5,6 @@ const _ = require('lodash');
 const { CronJob } = require('cron');
 const Keyv = require('keyv');
 const express = require('express');
-const KeyvPostgres = require('@keyv/postgres');
 
 const { useSqlite } = require('./settings');
 
@@ -14,14 +13,12 @@ let keyv;
 if (useSqlite) {
   keyv = new Keyv('sqlite://database.sqlite');
 } else {
-  const store = new KeyvPostgres({
-    uri: process.env.DATABASE_URL,
+  keyv = new Keyv(process.env.DATABASE_URL, {
     ssl: {
       require: true,
       rejectUnauthorized: false,
     },
   });
-  keyv = new Keyv({ store });
 }
 
 const winstonOptions = {
@@ -75,7 +72,10 @@ client.on('interactionCreate', async (interaction) => {
   try {
     await command.execute(interaction, keyv);
   } catch (error) {
-    console.error(error);
+    winston.error('error executing command', {
+      command,
+      error,
+    });
     await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
   }
 });
