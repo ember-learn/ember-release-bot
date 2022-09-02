@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "@authmaker/generator-express:version": "3.2.6",
   "scripts": {
-    "deploy-dev-commands": "NODE_ENV=development node deploy-commands.js",
-    "deploy-prod-commands": "NODE_ENV=production node deploy-commands.js",
+    "deploy-dev-commands": "NODE_ENV=development DISCORD_CLIENT_ID=1014542759220215888 node deploy-commands.js",
+    "deploy-prod-commands": "NODE_ENV=production DISCORD_CLIENT_ID=519243998380949505 node deploy-commands.js",
     "start": "NODE_ENV=production node app.js",
     "start-watch": "NODE_ENV=development pm2-runtime -s start app.js --name ember-release-bot --watch",
     "test": "NODE_ENV=test mocha --recursive --reporter spec",
