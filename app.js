@@ -57,7 +57,7 @@ client.once('ready', async () => {
     const channels = client.channels.cache.filter((channel) => channel.name === 'core-meta');
 
     channels.forEach((channel) => {
-      channel.send('Oh no! I\'ve forgotten everything :see_no_evil: please tell me what the next release is with !release next <number> <date>');
+      channel.send('Oh no! I\'ve forgotten everything :see_no_evil: please tell me what the next release is with `/release-next <version> <date>`');
     });
   }
 });
