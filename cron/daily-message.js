@@ -23,15 +23,15 @@ function createMessage({ dateString, waitingFor }) {
   }
 
   if (isReleaseInXDays(4, hoursUntilRelease)) {
-    return `:tada: It's release week!! :tada: To see who is done and who isn't you can say '!release done' and I'll tell you who still needs to do something!
+    return `:tada: It's release week!! :tada: To see who is done and who isn't you can say \`/release-done\` and I'll tell you who still needs to do something!
 
-If you know a team is done you can say '!release done <team>' where team can be blog, framework, data, or cli.`;
+If you know a team is done you can say \`/release-done <team>\` where team can be \`blog\`, \`framework\`, \`data\` or \`cli\`.`;
   }
 
   if (isReleaseInXDays(2, hoursUntilRelease)) {
     if (waitingFor.length) {
       // eslint-disable-next-line quotes
-      return `We're half way through release week! Remember: you can say '!release done' to see who still needs to release!`;
+      return `We're half way through release week! Remember: you can say \`/release-done\` to see who still needs to release!`;
     }
 
     return 'Wow! :tada: we have released everything within 3 days!? This must be some sort of record :scream: Congratulations to everyone who helped out! :tada:';

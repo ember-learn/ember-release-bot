@@ -52,9 +52,9 @@ describe('daily-message cron job', function () {
     await assertMessageForDate({
       todayDate: '2020-07-20',
       releaseDate: '2020-07-20',
-      message: `:tada: It's release week!! :tada: To see who is done and who isn't you can say '!release done' and I'll tell you who still needs to do something!
+      message: `:tada: It's release week!! :tada: To see who is done and who isn't you can say \`/release-done\` and I'll tell you who still needs to do something!
 
-If you know a team is done you can say '!release done <team>' where team can be blog, framework, data, or cli.`,
+If you know a team is done you can say \`/release-done <team>\` where team can be \`blog\`, \`framework\`, \`data\` or \`cli\`.`,
     });
   });
 
@@ -62,7 +62,7 @@ If you know a team is done you can say '!release done <team>' where team can be 
     await assertMessageForDate({
       todayDate: '2020-07-22',
       releaseDate: '2020-07-20',
-      message: `We're half way through release week! Remember: you can say '!release done' to see who still needs to release!`,
+      message: `We're half way through release week! Remember: you can say \`/release-done\` to see who still needs to release!`,
     });
   });
 
