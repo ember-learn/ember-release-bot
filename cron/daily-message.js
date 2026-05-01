@@ -19,7 +19,7 @@ function createMessage({ dateString, waitingFor }) {
   const hoursUntilRelease = lastDayOfReleaseWeek.diff(today, 'hours');
 
   if (isReleaseInXDays(11, hoursUntilRelease)) {
-    return `Release week starts next week on ${moment(dateString).format('YYYY-MM-DD')} are we all prepared? :lts:`;
+    return `Release week starts next week on ${moment.utc(dateString).format('YYYY-MM-DD')} are we all prepared? :lts:`;
   }
 
   if (isReleaseInXDays(4, hoursUntilRelease)) {

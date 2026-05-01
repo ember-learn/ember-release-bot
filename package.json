@@ -7,7 +7,7 @@
     "deploy-prod-commands": "NODE_ENV=production DISCORD_CLIENT_ID=519243998380949505 node deploy-commands.js",
     "start": "NODE_ENV=production node app.js",
     "start-watch": "NODE_ENV=development pm2-runtime -s start app.js --name ember-release-bot --watch",
-    "test": "NODE_ENV=test mocha --recursive --reporter spec",
+    "test": "NODE_ENV=test TZ=UTC mocha --recursive --reporter spec",
     "test-watch": "npm run test -- -w --reporter min",
     "lint": "eslint ."
   },
