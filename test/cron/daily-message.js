@@ -15,7 +15,7 @@ async function assertMessageForDate({
   await dailyMessage.job({
     channels: {
       cache: [{
-        name: 'core-meta',
+        name: 'core-meta-🔥',
         send(incomingMessage) {
           expect(incomingMessage).to.equal(message);
         },
@@ -133,7 +133,7 @@ If you know a team is done you can say \`/release-done <team>\` where team can b
     await dailyMessage.job({
       channels: {
         cache: [{
-          name: 'core-meta',
+          name: 'core-meta-🔥',
           send() {
             throw new Error('we should not hit this bit - no message should be sent');
           },
