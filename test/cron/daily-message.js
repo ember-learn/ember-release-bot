@@ -15,7 +15,7 @@ async function assertMessageForDate({
   await dailyMessage.job({
     channels: {
       cache: [{
-        name: 'core-meta',
+        name: 'core-meta-🔥',
         send(incomingMessage) {
           expect(incomingMessage).to.equal(message);
         },
@@ -24,7 +24,7 @@ async function assertMessageForDate({
   }, {
     get(key) {
       if (key === 'date') {
-        return new Date(`${releaseDate}`);
+        return releaseDate;
       }
 
       const [, product] = key.match(/^(\w+):done/);
@@ -133,7 +133,7 @@ If you know a team is done you can say \`/release-done <team>\` where team can b
     await dailyMessage.job({
       channels: {
         cache: [{
-          name: 'core-meta',
+          name: 'core-meta-🔥',
           send() {
             throw new Error('we should not hit this bit - no message should be sent');
           },
@@ -142,7 +142,7 @@ If you know a team is done you can say \`/release-done <team>\` where team can b
     }, {
       get(key) {
         if (key === 'date') {
-          return new Date('2020-07-20 10:00 GMT+00:00');
+          return '2020-07-20';
         }
 
         const [, product] = key.match(/^(\w+):done/);

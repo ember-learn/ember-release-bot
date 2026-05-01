@@ -19,7 +19,7 @@ function createMessage({ dateString, waitingFor }) {
   const hoursUntilRelease = lastDayOfReleaseWeek.diff(today, 'hours');
 
   if (isReleaseInXDays(11, hoursUntilRelease)) {
-    return `Release week starts next week on ${moment(dateString).format('YYYY-MM-DD')} are we all prepared? :lts:`;
+    return `Release week starts next week on ${moment.utc(dateString).format('YYYY-MM-DD')} are we all prepared? :lts:`;
   }
 
   if (isReleaseInXDays(4, hoursUntilRelease)) {
@@ -57,7 +57,7 @@ module.exports = {
   cron: '00 10 * * *', // once a day at 9:30 UTC
   job(client, keyv) {
     return async () => {
-      const channels = client.channels.cache.filter((ch) => ch.name === 'core-meta');
+      const channels = client.channels.cache.filter((ch) => ch.name.startsWith('core-meta'));
 
       const dateString = await keyv.get('date');
 

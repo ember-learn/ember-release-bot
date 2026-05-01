@@ -54,7 +54,7 @@ client.once('ready', async () => {
   const version = await keyv.get('version');
 
   if (!version) {
-    const channels = client.channels.cache.filter((channel) => channel.name === 'core-meta');
+    const channels = client.channels.cache.filter((channel) => channel.name.startsWith('core-meta'));
 
     channels.forEach((channel) => {
       channel.send('Oh no! I\'ve forgotten everything :see_no_evil: please tell me what the next release is with `/release-next <version> <date>`');
